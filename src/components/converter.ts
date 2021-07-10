@@ -10,6 +10,7 @@ export function csvToJson(file: File): Promise<string[]> {
       if (worksheet) {
         result = XLSX.utils.sheet_to_json(workbook.Sheets[worksheet], {
           range: 0,
+          raw: false,
           header: 1,
           blankrows: true,
         });

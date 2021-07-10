@@ -129,6 +129,14 @@
           </div>
           <div class="row items-center justify-center">
             <q-btn
+              flat
+              color="grey-8"
+              size="sm"
+              :label="hides[i] ? 'expand' : 'hide'"
+              unelevated
+              @click="onHideTemplate(i)"
+            />
+            <q-btn
               round
               flat
               color="red"
@@ -139,70 +147,74 @@
             />
           </div>
         </div>
-        <div
-          v-for="(field, j) in template.fields"
-          :key="j"
-          class="
-            field-container
-            row
-            items-center
-            justify-between
-            full-width
-            q-mb-sm
-          "
-        >
-          <div class="row q-gutter-y-sm">
+        <q-slide-transition>
+          <div v-show="!hides[i]">
             <div
+              v-for="(field, j) in template.fields"
+              :key="j"
               class="
-                q-mr-md
-                field-btn-container
+                field-container
                 row
                 items-center
-                justify-center
-                q-gutter-x-sm
+                justify-between
+                full-width
+                q-mb-sm
               "
             >
-              <div class="row items-center justify-center">
-                <q-btn
-                  round
-                  outline
-                  color="black"
-                  size="sm"
-                  icon="expand_less"
-                  unelevated
-                  @click="onMoveField(i, j, 'up')"
-                />
+              <div class="row q-gutter-y-sm">
+                <div
+                  class="
+                    q-mr-md
+                    field-btn-container
+                    row
+                    items-center
+                    justify-center
+                    q-gutter-x-sm
+                  "
+                >
+                  <div class="row items-center justify-center">
+                    <q-btn
+                      round
+                      outline
+                      color="black"
+                      size="sm"
+                      icon="expand_less"
+                      unelevated
+                      @click="onMoveField(i, j, 'up')"
+                    />
+                  </div>
+                  <div class="row items-center justify-center">
+                    <q-btn
+                      round
+                      outline
+                      color="black"
+                      size="sm"
+                      icon="expand_more"
+                      unelevated
+                      @click="onMoveField(i, j, 'down')"
+                    />
+                  </div>
+                </div>
+                <field
+                  :field="field"
+                  @update:field="(v) => onUpdateField(i, j, v)"
+                  :files="processedFiles"
+                ></field>
               </div>
-              <div class="row items-center justify-center">
+              <div class="row items-center justify-center field-btn-container">
                 <q-btn
+                  flat
                   round
-                  outline
-                  color="black"
+                  color="red"
                   size="sm"
-                  icon="expand_more"
+                  icon="close"
                   unelevated
-                  @click="onMoveField(i, j, 'down')"
+                  @click="onRemoveField(i, j)"
                 />
               </div>
             </div>
-            <field
-              :field="field"
-              @update:field="(v) => onUpdateField(i, j, v)"
-              :files="processedFiles"
-            ></field>
           </div>
-          <div class="row items-center justify-center field-btn-container">
-            <q-btn
-              flat
-              round
-              color="red"
-              size="sm"
-              icon="close"
-              unelevated
-              @click="onRemoveField(i, j)"
-            />
-          </div>
-        </div>
+        </q-slide-transition>
       </div>
       <div class="full-width row items-center justify-end q-gutter-x-md">
         <q-btn unelevated color="black" label="Generate" type="submit" />
@@ -267,11 +279,13 @@ export default defineComponent({
       result: '',
       processedFiles: [],
       setting: null,
+      hides: [false],
     });
     onMounted(() => {
       const templates = LocalStorage.getItem('templates');
       if (templates) {
         state.templates = templates as any;
+        state.hides = state.templates.map(() => true);
       }
     });
     function onAddSection() {
@@ -280,6 +294,7 @@ export default defineComponent({
         delimiter: '|',
         fields: [getDefaultField(FieldType.text, 1)],
       });
+      state.hides.push(false);
     }
     function onAddField(i) {
       let position = 1;
@@ -420,6 +435,7 @@ export default defineComponent({
         cancel: 'Cancel',
       }).onOk(() => {
         state.templates.splice(i, 1);
+        state.hides.splice(i, 1);
       });
     }
     function onMoveTemplate(i, direction) {
@@ -437,9 +453,9 @@ export default defineComponent({
       try {
         state.setting = file;
         const text = await file.text();
-        console.log(text)
         const json = JSON.parse(text);
         state.templates = json;
+        state.hides = state.templates.map(() => false);
       } catch (err) {
         console.error(err);
         Notify.create({ message: 'invalid setting file', color: 'red' });
@@ -456,12 +472,12 @@ export default defineComponent({
     }
     function onExportSetting() {
       const json = templatesToJson(state.templates);
-      const date = moment().format('DD-MM-YYYY_HH:mm');
+      const date = moment().format('DD-MM-YYYY_HH-mm');
       download(JSON.stringify(json), `setting_${date}.json`);
     }
     function onClickDownload() {
       try {
-        const date = moment().format('DD-MM-YYYY_HH:mm');
+        const date = moment().format('DD-MM-YYYY_HH-mm');
         download(state.result, `download_${date}.txt`);
         Notify.create({
           message: 'Downloaded',
@@ -474,6 +490,9 @@ export default defineComponent({
           color: 'red-6',
         });
       }
+    }
+    function onHideTemplate(i) {
+      state.hides[i] = !state.hides[i];
     }
     return {
       ...toRefs(state),
@@ -492,6 +511,7 @@ export default defineComponent({
       onImportSetting,
       onExportSetting,
       onClickDownload,
+      onHideTemplate,
     };
   },
 });
@@ -550,6 +570,6 @@ export default defineComponent({
   width: 100%;
 }
 .field {
-  width: 200px;
+  width: 140px;
 }
 </style>

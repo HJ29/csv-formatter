@@ -2,6 +2,15 @@
   <div class="row q-gutter-x-md q-gutter-y-sm">
     <q-input
       class="field"
+      outlined
+      dense
+      hide-bottom-space
+      label="Label"
+      :model-value="field.label"
+      @update:model-value="(label) => onUpdateField({ ...field, label })"
+    ></q-input>
+    <q-input
+      class="field"
       type="number"
       outlined
       dense
@@ -125,13 +134,6 @@ export default defineComponent({
       }
       emit('update:field', field);
     }
-    // async function onSelectFile(event) {
-    //   const file = event.target.files[0];
-    //   const json = await csvToJson(file);
-    //   console.log(json);
-    //   // let input = json.slice(state.start - 1).filter((v) => v.length > 0);
-    //   // console.log(input);
-    // }
     return { ...toRefs(state), onUpdateField };
   },
 });
@@ -140,6 +142,6 @@ export default defineComponent({
 .
 <style lang="scss" scoped>
 .field {
-  width: 200px;
+  width: 140px;
 }
 </style>

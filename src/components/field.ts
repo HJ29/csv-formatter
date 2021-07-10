@@ -7,6 +7,7 @@ export enum FieldType {
 interface BaseField {
   type: FieldType;
   position: number;
+  label: string;
 }
 
 export interface ExcelField extends BaseField {
@@ -17,6 +18,7 @@ export interface ExcelField extends BaseField {
 
 const defaultExcelField: ExcelField = {
   type: FieldType.excel,
+  label: '',
   position: null,
   range: 'B9:B*',
   file: null,
@@ -29,6 +31,7 @@ export interface TextField extends BaseField {
 
 const defaultTextField: TextField = {
   type: FieldType.text,
+  label: '',
   position: null,
   value: '',
 };
@@ -41,6 +44,7 @@ export interface IndexField extends BaseField {
 
 const defaultIndexField: IndexField = {
   type: FieldType.index,
+  label: '',
   skip: 0,
   position: null,
   value: 0,
