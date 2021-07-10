@@ -405,14 +405,14 @@ export default defineComponent({
     function onMoveField(i, j, direction) {
       const template = state.templates[i];
       if (
-        (i === 0 && direction === 'up') ||
-        (i === template.fields.length - 1 && direction === 'down')
+        (j === 0 && direction === 'up') ||
+        (j === template.fields.length - 1 && direction === 'down')
       ) {
         return;
       }
       const field = clone(template.fields[j]);
-      template.fields.splice(i, 1);
-      template.fields.splice(direction === 'up' ? i - 1 : i + 1, 0, field);
+      template.fields.splice(j, 1);
+      template.fields.splice(direction === 'up' ? j - 1 : j + 1, 0, field);
     }
     function onRemoveTemplate(i) {
       Dialog.create({
@@ -437,6 +437,7 @@ export default defineComponent({
       try {
         state.setting = file;
         const text = await file.text();
+        console.log(text)
         const json = JSON.parse(text);
         state.templates = json;
       } catch (err) {
@@ -456,7 +457,7 @@ export default defineComponent({
     function onExportSetting() {
       const json = templatesToJson(state.templates);
       const date = moment().format('DD-MM-YYYY_HH:mm');
-      download(json, `setting_${date}.json`);
+      download(JSON.stringify(json), `setting_${date}.json`);
     }
     function onClickDownload() {
       try {
