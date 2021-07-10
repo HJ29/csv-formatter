@@ -1,6 +1,6 @@
-# M2U Bulk Payment (m2u-bulk-payment)
+# CSV Formatter (csv-formatter)
 
-m2u bulk payment generator
+csv formatter
 
 ## Install the dependencies
 ```bash
@@ -24,4 +24,4 @@ quasar build
 
 ### Customize the configuration
 See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
-# m2u-bulk-payment
+# csv-formatter

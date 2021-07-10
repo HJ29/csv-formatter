@@ -1,8 +1,8 @@
 {
-  "name": "m2u-bulk-payment",
+  "name": "csv-formatter",
   "version": "0.0.1",
-  "description": "m2u bulk payment generator",
-  "productName": "M2U Bulk Payment",
+  "description": "csv formatter",
+  "productName": "CSV Formatter",
   "author": "HJ",
   "private": true,
   "scripts": {

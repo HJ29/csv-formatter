@@ -244,14 +244,13 @@ import {
   FieldType,
   getDefaultField,
 } from 'src/components/field';
-import { defineComponent, reactive, toRefs, computed, onMounted } from 'vue';
+import { defineComponent, reactive, toRefs, onMounted } from 'vue';
 import { csvToJson } from '../components/converter';
 import moment from 'moment';
 
 export default defineComponent({
   name: 'PageIndex',
   components: {
-    // ExampleComponent
     Field,
   },
   setup() {

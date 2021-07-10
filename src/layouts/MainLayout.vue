@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         /> -->
 
-        <q-toolbar-title> File Generator </q-toolbar-title>
+        <q-toolbar-title> CSV Formatter </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'MainLayout',

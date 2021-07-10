@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, computed } from 'vue';
+import { defineComponent, reactive, toRefs } from 'vue';
 import { capitalCase } from 'change-case';
 import { FieldType, getDefaultField } from './field';
 
