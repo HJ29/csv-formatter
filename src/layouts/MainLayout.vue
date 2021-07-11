@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-black">
-      <q-toolbar>
+      <q-toolbar class="q-px-md">
         <!-- <q-btn
           flat
           dense
@@ -12,6 +12,7 @@
         /> -->
 
         <q-toolbar-title> CSV Formatter </q-toolbar-title>
+        <div class="text-caption">{{ version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -45,6 +46,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { version } from '../../package.json';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -52,7 +54,9 @@ export default defineComponent({
   components: {},
 
   setup() {
-    return {};
+    return {
+      version,
+    };
   },
 });
 </script>
