@@ -1,7 +1,10 @@
 <template>
   <q-page class="column items-start justify-start q-mx-lg q-my-lg">
-    <q-form class="full-width" @submit="onGenerate">
-      <!-- <input ref="input" type="file" @change="onInput" /> -->
+    <q-form
+      class="full-width"
+      @submit="onGenerate"
+      @validation-error="onGenerateError"
+    >
       <div class="q-mb-sm row q-gutter-x-md justify-between q-gutter-y-sm">
         <div class="row justify-start items-center q-gutter-y-sm">
           <q-btn
@@ -274,7 +277,6 @@ export default defineComponent({
           fields: [getDefaultField(FieldType.text, 1)],
         },
       ],
-      delimiter: '|',
       files: [],
       result: '',
       processedFiles: [],
@@ -334,13 +336,17 @@ export default defineComponent({
                 row = [...row, ...fields];
                 return row;
               }, [])
-              .join(state.delimiter);
+              .join(template.delimiter);
             rows.push(row);
             return rows;
           }, []);
           result = [...result, ...rows];
         });
         state.result = result.join('\n');
+        Notify.create({
+          message: 'Successfully generated',
+          color: 'green-6',
+        });
       } catch (err) {
         console.error(err);
         Notify.create({ message: 'Failed to generate', color: 'red' });
@@ -494,10 +500,15 @@ export default defineComponent({
     function onHideTemplate(i) {
       state.hides[i] = !state.hides[i];
     }
+    function onGenerateError(ref) {
+      state.hides = state.hides.map(() => false);
+      setTimeout(() => {
+        ref.focus();
+      }, 300);
+    }
     return {
       ...toRefs(state),
       onUpdateFiles,
-      // onInput,
       onAddSection,
       onAddField,
       onUpdateField,
@@ -512,6 +523,7 @@ export default defineComponent({
       onExportSetting,
       onClickDownload,
       onHideTemplate,
+      onGenerateError,
     };
   },
 });
