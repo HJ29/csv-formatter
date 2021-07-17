@@ -2,6 +2,9 @@
 
 csv formatter
 
+### Demo
+[Demo](https://hj29.github.io/csv-formatter/)
+
 ## Install the dependencies
 ```bash
 yarn
