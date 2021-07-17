@@ -56,7 +56,11 @@ export function clone(v) {
   return JSON.parse(JSON.stringify(v));
 }
 
-export function getDefaultField(type: FieldType, position: number = null) {
+export function getDefaultField(
+  type: FieldType,
+  position: number = null,
+  label = ''
+) {
   let field;
   switch (type) {
     case FieldType.excel:
@@ -74,6 +78,7 @@ export function getDefaultField(type: FieldType, position: number = null) {
   if (typeof position === 'number') {
     field.position = Number(position);
   }
+  field.label = label;
   return field;
 }
 

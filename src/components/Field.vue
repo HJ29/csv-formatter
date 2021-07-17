@@ -130,7 +130,7 @@ export default defineComponent({
     function onUpdateField(v) {
       let field = v;
       if (props.field.type !== v.type) {
-        field = getDefaultField(v.type, v.position);
+        field = getDefaultField(v.type, v.position, v.label);
       }
       emit('update:field', field);
     }
