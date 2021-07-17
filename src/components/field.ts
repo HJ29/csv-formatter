@@ -97,9 +97,11 @@ export function fieldToValue(
       let value;
       const { x, y } = columnNameToXY(start);
       if (!end) {
-        value = field.file[y][x];
+        const row = field.file[y];
+        value = row ? row[x] : '';
       } else {
-        value = field.file[y + index][x];
+        const row = field.file[y + index];
+        value = row ? row[x] : '';
       }
       return [...result, value];
     case FieldType.index: {
