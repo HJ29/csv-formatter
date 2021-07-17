@@ -1,257 +1,273 @@
 <template>
-  <q-page class="column items-start justify-start q-mx-lg q-my-lg">
-    <q-form
-      class="full-width"
-      @submit="onGenerate"
-      @validation-error="onGenerateError"
-    >
-      <div class="q-mb-sm row q-gutter-x-md justify-between q-gutter-y-sm">
-        <div class="row justify-start items-center q-gutter-y-sm">
-          <q-btn
-            class="q-mr-md"
-            icon-right="add"
-            outline
-            unelevated
-            color="black"
-            label="Add Section"
-            @click="onAddSection()"
-          />
-          <q-file
-            class="field"
-            label-color="green-8"
-            color="green-8"
-            dense
-            outlined
-            :model-value="files"
-            @update:model-value="onUpdateFiles"
-            label="Upload Excel"
-            :multiple="true"
-            accept=".csv,.xlsx,.xls"
-            input-class="ellipsis"
-            input-style="overflow: hidden;"
-          >
-            <template v-slot:prepend>
-              <q-icon color="green-8" name="attach_file" />
-            </template>
-          </q-file>
-        </div>
-        <div class="row q-gutter-y-sm">
-          <q-btn
-            @click="onClickSaveTemplate"
-            unelevated
-            outline
-            color="black"
-            label="Save"
-            class="q-mr-sm"
-          />
-          <q-btn
-            icon-right="file_download"
-            class="q-mr-sm"
-            outline
-            unelevated
-            color="black"
-            label="Export Setting"
-            @click="onExportSetting"
-          />
-          <q-file
-            class="field"
-            dense
-            outlined
-            :model-value="setting"
-            @update:model-value="onImportSetting"
-            label="Import Setting"
-            input-class="ellipsis"
-            input-style="overflow: hidden;"
-          >
-            <template v-slot:prepend>
-              <q-icon name="attach_file" />
-            </template>
-          </q-file>
-        </div>
-      </div>
-      <div
-        v-for="(template, i) in templates"
-        :key="i"
-        class="section-container"
-      >
-        <div
-          class="
-            q-mb-sm
-            row
-            justify-between
-            items-center
-            row
-            q-gutter-x-sm q-gutter-y-sm
-          "
-        >
-          <div class="row q-gutter-x-sm q-gutter-y-sm">
-            <div class="row items-center justify-center">
+  <q-page class="column items-start justify-start q-mx-lg q-my-md">
+    <q-tabs v-model="tab" inline-label>
+      <q-tab name="formatter" label="FORMATTER"> </q-tab>
+      <q-tab name="demo" label="DEMO"> </q-tab>
+    </q-tabs>
+    <q-tab-panels v-model="tab" animated class="full-width">
+      <q-tab-panel name="formatter" class="q-pa-none no-scroll">
+        <q-form @submit="onGenerate" @validation-error="onGenerateError">
+          <div class="q-mb-sm row q-gutter-x-md justify-between q-gutter-y-sm">
+            <div class="row justify-start items-center q-gutter-y-sm">
               <q-btn
-                round
+                class="q-mr-md"
+                icon-right="add"
+                outline
+                unelevated
+                color="black"
+                label="Add Section"
+                @click="onAddSection()"
+              />
+              <q-file
+                class="field"
+                label-color="green-8"
+                color="green-8"
+                dense
+                outlined
+                :model-value="files"
+                @update:model-value="onUpdateFiles"
+                label="Upload Excel"
+                :multiple="true"
+                accept=".csv,.xlsx,.xls"
+                input-class="ellipsis"
+                input-style="overflow: hidden;"
+              >
+                <template v-slot:prepend>
+                  <q-icon color="green-8" name="attach_file" />
+                </template>
+              </q-file>
+            </div>
+            <div class="row q-gutter-y-sm">
+              <q-btn
+                @click="onClickSaveTemplate"
+                unelevated
                 outline
                 color="black"
-                size="sm"
-                icon="expand_less"
-                unelevated
-                @click="onMoveTemplate(i, 'up')"
+                label="Save"
+                class="q-mr-sm"
               />
-            </div>
-            <div class="row items-center justify-center">
               <q-btn
-                round
+                icon-right="file_download"
+                class="q-mr-sm"
                 outline
-                color="black"
-                size="sm"
-                icon="expand_more"
                 unelevated
-                @click="onMoveTemplate(i, 'down')"
+                color="black"
+                label="Export Setting"
+                @click="onExportSetting"
               />
+              <q-file
+                class="field"
+                dense
+                outlined
+                :model-value="setting"
+                @update:model-value="onImportSetting"
+                label="Import Setting"
+                input-class="ellipsis"
+                input-style="overflow: hidden;"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="attach_file" />
+                </template>
+              </q-file>
             </div>
-            <q-btn
-              icon-right="add"
-              outline
-              unelevated
-              color="black"
-              label="Add Field"
-              @click="onAddField(i)"
-            />
-            <q-input
-              class="field"
-              dense
-              outlined
-              v-model="template.delimiter"
-              label="Delimiter"
-            ></q-input>
-            <q-input
-              class="field"
-              dense
-              outlined
-              v-model="template.rows"
-              label="Minimum Row"
-            ></q-input>
           </div>
-          <div class="row items-center justify-center">
-            <q-btn
-              flat
-              color="grey-8"
-              size="sm"
-              :label="hides[i] ? 'expand' : 'hide'"
-              unelevated
-              @click="onHideTemplate(i)"
-            />
-            <q-btn
-              round
-              flat
-              color="red"
-              size="sm"
-              icon="close"
-              unelevated
-              @click="onRemoveTemplate(i)"
-            />
-          </div>
-        </div>
-        <q-slide-transition>
-          <div v-show="!hides[i]">
+          <div
+            v-for="(template, i) in templates"
+            :key="i"
+            class="section-container"
+          >
             <div
-              v-for="(field, j) in template.fields"
-              :key="j"
               class="
-                field-container
-                row
-                items-center
-                justify-between
-                full-width
                 q-mb-sm
+                row
+                justify-between
+                items-center
+                row
+                q-gutter-x-sm q-gutter-y-sm
               "
             >
-              <div class="row q-gutter-y-sm">
-                <div
-                  class="
-                    q-mr-md
-                    field-btn-container
-                    row
-                    items-center
-                    justify-center
-                    q-gutter-x-sm
-                  "
-                >
-                  <div class="row items-center justify-center">
-                    <q-btn
-                      round
-                      outline
-                      color="black"
-                      size="sm"
-                      icon="expand_less"
-                      unelevated
-                      @click="onMoveField(i, j, 'up')"
-                    />
-                  </div>
-                  <div class="row items-center justify-center">
-                    <q-btn
-                      round
-                      outline
-                      color="black"
-                      size="sm"
-                      icon="expand_more"
-                      unelevated
-                      @click="onMoveField(i, j, 'down')"
-                    />
-                  </div>
+              <div class="row q-gutter-x-sm q-gutter-y-sm">
+                <div class="row items-center justify-center">
+                  <q-btn
+                    round
+                    outline
+                    color="black"
+                    size="sm"
+                    icon="expand_less"
+                    unelevated
+                    @click="onMoveTemplate(i, 'up')"
+                  />
                 </div>
-                <field
-                  :field="field"
-                  @update:field="(v) => onUpdateField(i, j, v)"
-                  :files="processedFiles"
-                ></field>
+                <div class="row items-center justify-center">
+                  <q-btn
+                    round
+                    outline
+                    color="black"
+                    size="sm"
+                    icon="expand_more"
+                    unelevated
+                    @click="onMoveTemplate(i, 'down')"
+                  />
+                </div>
+                <q-btn
+                  icon-right="add"
+                  outline
+                  unelevated
+                  color="black"
+                  label="Add Field"
+                  @click="onAddField(i)"
+                />
+                <q-input
+                  class="field"
+                  dense
+                  outlined
+                  v-model="template.delimiter"
+                  label="Delimiter"
+                ></q-input>
+                <q-input
+                  class="field"
+                  dense
+                  outlined
+                  v-model="template.rows"
+                  label="Minimum Row"
+                ></q-input>
               </div>
-              <div class="row items-center justify-center field-btn-container">
+              <div class="row items-center justify-center">
                 <q-btn
                   flat
+                  color="grey-8"
+                  size="sm"
+                  :label="hides[i] ? 'expand' : 'hide'"
+                  unelevated
+                  @click="onHideTemplate(i)"
+                />
+                <q-btn
                   round
+                  flat
                   color="red"
                   size="sm"
                   icon="close"
                   unelevated
-                  @click="onRemoveField(i, j)"
+                  @click="onRemoveTemplate(i)"
                 />
               </div>
             </div>
+            <q-slide-transition>
+              <div v-show="!hides[i]">
+                <div
+                  v-for="(field, j) in template.fields"
+                  :key="j"
+                  class="
+                    field-container
+                    row
+                    items-center
+                    justify-between
+                    full-width
+                    q-mb-sm
+                  "
+                >
+                  <div class="row q-gutter-y-sm">
+                    <div
+                      class="
+                        q-mr-md
+                        field-btn-container
+                        row
+                        items-center
+                        justify-center
+                        q-gutter-x-sm
+                      "
+                    >
+                      <div class="row items-center justify-center">
+                        <q-btn
+                          round
+                          outline
+                          color="black"
+                          size="sm"
+                          icon="expand_less"
+                          unelevated
+                          @click="onMoveField(i, j, 'up')"
+                        />
+                      </div>
+                      <div class="row items-center justify-center">
+                        <q-btn
+                          round
+                          outline
+                          color="black"
+                          size="sm"
+                          icon="expand_more"
+                          unelevated
+                          @click="onMoveField(i, j, 'down')"
+                        />
+                      </div>
+                    </div>
+                    <field
+                      :field="field"
+                      @update:field="(v) => onUpdateField(i, j, v)"
+                      :files="processedFiles"
+                    ></field>
+                  </div>
+                  <div
+                    class="row items-center justify-center field-btn-container"
+                  >
+                    <q-btn
+                      flat
+                      round
+                      color="red"
+                      size="sm"
+                      icon="close"
+                      unelevated
+                      @click="onRemoveField(i, j)"
+                    />
+                  </div>
+                </div>
+              </div>
+            </q-slide-transition>
           </div>
-        </q-slide-transition>
-      </div>
-      <div class="full-width row items-center justify-end q-gutter-x-md">
-        <q-btn unelevated color="black" label="Generate" type="submit" />
-      </div>
-      <div class="preview-container">
-        <div class="preview-btn row items-center justify-center q-gutter-x-sm">
-          <q-btn
-            round
-            color="black"
-            icon="file_download"
-            flat
-            class="copy-btn"
-            size="sm"
-            @click="onClickDownload"
-          />
-          <q-btn
-            round
-            color="black"
-            icon="content_copy"
-            flat
-            size="sm"
-            @click="onClickCopy"
-          />
-        </div>
-        <q-separator></q-separator>
-        <pre class="preview hide-scrollbar">{{ result }}</pre>
-      </div>
-    </q-form>
+          <div class="full-width row items-center justify-end q-gutter-x-md">
+            <q-btn unelevated color="black" label="Generate" type="submit" />
+          </div>
+          <div class="preview-container">
+            <div
+              class="preview-btn row items-center justify-center q-gutter-x-sm"
+            >
+              <q-btn
+                round
+                color="black"
+                icon="file_download"
+                flat
+                class="copy-btn"
+                size="sm"
+                @click="onClickDownload"
+              />
+              <q-btn
+                round
+                color="black"
+                icon="content_copy"
+                flat
+                size="sm"
+                @click="onClickCopy"
+              />
+            </div>
+            <q-separator></q-separator>
+            <pre class="preview hide-scrollbar">{{ result }}</pre>
+          </div>
+        </q-form>
+      </q-tab-panel>
+      <q-tab-panel name="demo" class="q-pa-none no-scroll">
+        <iframe
+          src="https://drive.google.com/file/d/11x7kvkF7IRtC_Nc6yhkKzqIY3OIGY3Sy/preview"
+          :width="video.width"
+          :height="video.height"
+          allow="autoplay"
+        ></iframe>
+      </q-tab-panel>
+    </q-tab-panels>
   </q-page>
 </template>
 
 <script lang="ts">
 import Field from 'components/Field.vue';
-import { copyToClipboard, Dialog, LocalStorage, Notify } from 'quasar';
+import { copyToClipboard, Dialog, LocalStorage, Notify, Screen } from 'quasar';
 import {
   clone,
   countRows,
@@ -270,6 +286,7 @@ export default defineComponent({
   },
   setup() {
     let state = reactive({
+      tab: 'formatter',
       templates: [
         {
           rows: 0,
@@ -282,6 +299,10 @@ export default defineComponent({
       processedFiles: [],
       setting: null,
       hides: [false],
+      video: {
+        width: Screen.width - 48 - 14,
+        height: ((Screen.width - 48 - 14) * 9) / 16,
+      },
     });
     onMounted(() => {
       const templates = LocalStorage.getItem('templates');
